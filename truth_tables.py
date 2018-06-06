@@ -1,0 +1,2 @@
+import Chooseyourownadventure
+Chooseyourownadventure.TestRoom.read_room()
