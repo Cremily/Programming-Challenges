@@ -68,13 +68,6 @@ while (len(p1) != 0 and len(p2) != 0):
                 p1.append(p2_war)
                 p1_war = []
                 p2_war = []
-
-
-                
-
-                
-            
-
 else:
     if len(p1) == 0:
         print("2 " + str(rounds) )
