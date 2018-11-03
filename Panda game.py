@@ -13,17 +13,8 @@ for index,start in enumerate(diagram[0]):
         while position(x,y) == '|' or position(x,y) == '-':
             if position(x-1,y) == '-':
                 x -= 3
-<<<<<<< HEAD
             elif position(x+1,y) == '-':
                 x += 3
-=======
-                if position(x-1,y) == '-':
-                    x-= 3
-            elif position(x+1,y) == '-':
-                x += 3
-                if position(x+1,y) == '-':
-                    x+= 3
->>>>>>> master
             if position(x,y) == '|':
                 y+= 1
         else:
