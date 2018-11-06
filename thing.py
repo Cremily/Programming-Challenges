@@ -1,2 +1,1 @@
-def Function():
-    pass
+print(1j ** 2)

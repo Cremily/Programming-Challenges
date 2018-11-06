@@ -1,15 +1,15 @@
 import sys
 l,c = (5, 5)
-start_map =[['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', 'I', 'X', 'X', 'X', 'X', 'X', ' ', '#'], ['#', ' ', ' ', '@', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', 'E', ' ', 'S', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', 'I', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', 'B', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', 'B', ' ', ' ', ' ', 'S', ' ', ' ', ' ', ' ', ' ', 'W', '#'], ['#', ' ', ' ', 'B', ' ', ' ', ' ', 'T', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'T', ' ', ' ', ' ', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B', ' ', ' ', ' ', '#'], ['#', 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', '$', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X', 'X', 'X', 'X', ' ', '#'], ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']]
+start_map = [['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', 'I', 'X', 'X', 'X', 'X', 'X', ' ', '#'], ['#', ' ', ' ', '@', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', 'E', ' ', 'S', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', 'I', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', 'B', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', 'B', ' ', ' ', ' ', 'S', ' ', ' ', ' ', ' ', ' ', 'W', '#'], ['#', ' ', ' ', 'B', ' ', ' ', ' ', 'T', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'T', ' ', ' ', ' ', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B', ' ', ' ', ' ', '#'], ['#', 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', '$', '#'], ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X', 'X', 'X', 'X', ' ', '#'], ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']]
 for line in start_map:
     print(line)
 #code goes here
-raise(Exception)
 for y_index,line in enumerate(start_map):
     for x_index,row in enumerate(line):
         if start_map[y_index][x_index] == "@":
             x,y = x_index,y_index
 obstacles = ['#','X']
+move_list = []
 class Default_Movement():
     def choose_move(self,x,y):
         if start_map[y+1][x] not in obstacles:
@@ -42,6 +42,7 @@ class Class():
         if self.breaker == False:
             obstacles = ['#']
             self.breaker = True
+            print("breaker on",file=sys.stderr)
         else:
             obstacles = ['#','X']
             self.breaker = False
@@ -49,8 +50,10 @@ class Class():
     def inverse_state(self):
         if isinstance(self.move_state,Default_Movement):
             self.move_state = Inverse_Movement()
+            print("inverse on",file=sys.stderr)
         else:
             self.move_state = Default_Movement()
+            print("inverse off",file=sys.stderr)
     def teleport_bender(self):
         for y_index,line in enumerate(start_map):
             for x_index,dummy_row in enumerate(line):
@@ -84,25 +87,25 @@ class Class():
     def go_south(self):
             while (start_map[self.y+1][self.x] not in obstacles):
                 self.y = self.y + 1
-                print("SOUTH")
+                move_list.append("SOUTH")
                 if self.check_pos():
                     break
     def go_north(self):
         while (start_map[self.y-1][self.x] not in obstacles):
             self.y += -1
-            print("NORTH")
+            move_list.append("NORTH")
             if self.check_pos():
                 break
     def go_east(self):
         while (start_map[self.y][self.x+1] not in obstacles): 
             self.x += 1
-            print("EAST")
+            move_list.append("EAST")
             if self.check_pos():
                 break
     def go_west(self):
         while (start_map[self.y][self.x-1] not in obstacles):
             self.x -= 1
-            print("WEST")
+            move_list.append("WEST")
             if self.check_pos():
                 break
     def choose_move(self):
@@ -126,9 +129,20 @@ class Class():
             elif direction == "w":
                 self.go_west()
     def move_loop(self):
-        while self.check_pos() != "finish":
-            input()
+        count = 0
+        while self.check_pos() != "finish" and count < 20:
+            count+= 1
             self.check_pos()
             self.choose_move()
+            print((self.x,self.y),file=sys.stderr)
+            for line in start_map:
+                print(line,file=sys.stderr)
+        return(count)
+    
 c = Class(x,y)
-c.move_loop()
+count = c.move_loop()
+if count < 20:
+    for move in move_list:
+        print(move)
+else:
+    print("LOOP")
